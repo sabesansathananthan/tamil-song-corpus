@@ -1,4 +1,4 @@
-# tamil-song-corpus
+# tamil-song-corpus :notes:
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/sabesansathananthan/tamil-song-corpus?color=red&style=plastic)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/sabesansathananthan/tamil-song-corpus?style=plastic)
@@ -28,7 +28,7 @@ Randomly selected 1500 songs data are fully translated to Tamil and extra metada
 
 Bulk API format of those 1500 songs are stored as [`tamil_songs_corpus_final.txt`](/Data/tamil_songs_corpus_final.txt) file.
 
-> :point_up: **NOTE**
+> :memo: **NOTE**
 >
 > > #### **Attributes**
 > >
@@ -54,8 +54,9 @@ Bulk API format of those 1500 songs are stored as [`tamil_songs_corpus_final.txt
 
 ## Query DSL for ElasticSearch search engine
 
+- Deleting an index(database)
+
 ```JSON
-# deleting an index(database)
 DELETE /songs_db_index
 ```
 
@@ -63,10 +64,11 @@ DELETE /songs_db_index
 >
 > > - The below code must be run before creating the index(database).
 > > - Make a folder named analysis in elasticserach config folder.
-> > - Please copy tamil_stopwords.txt & tamil_stemming.txt to the analysis folder
+> > - Please copy [`tamil_stopwords.txt`](/Data/tamil_stopwords.txt) & [`tamil_stemming.txt`](/Data/tamil_stemming.txt) to the analysis folder.
+
+- Custom stop words and stemming new analyzer along with the standard analyzer
 
 ```JSON
-# custom stop words and stemming new analyzer along with the standard analyzer
 PUT /songs_db_index/
 {
        "settings": {
@@ -90,4 +92,315 @@ PUT /songs_db_index/
            }
        }
    }
+```
+
+- Checking the custom analyzer(stopwords, stemming)
+
+```JSON
+GET /songs_db_index/_analyze
+{
+ "text": ["மிகவும் இனிமையான ஒரு 10 பாடல்கள்"],
+ "analyzer": "my_analyzer"
+}
+```
+
+- Using custom indexing for search. ஹரிஸ் ஜெயராஜ் songs spelling mistake
+
+```JSON
+GET /songs_db_index/songs/_search
+{
+   "query": {
+       "multi_match" : {
+           "query" : "ஹஷ்ரி ஜெராயஜ்",
+           "fuzziness": "AUTO",
+       "analyzer": "my_analyzer"
+       }
+   }
+}
+```
+
+- Using standard indexing for search. ஹரிஸ் ஜெயராஜ் songs spelling mistake.
+
+```JSON
+GET /songs_db_index/songs/_search
+{
+   "query": {
+       "multi_match" : {
+           "query" : "ஹஷ்ரி ஜெராயஜ்",
+           "fuzziness": "AUTO",
+       "analyzer": "standard"
+       }
+   }
+}
+```
+
+- Top 10 songs from 2010 to 2020 using `song_rating`
+
+```JSON
+GET /songs_db_index/songs/_search
+{
+   "size" : 10,
+    "sort" : [
+       { "song_rating" : {"order" : "desc"}}
+   ],
+   "query": {
+       "range" : {
+           "year" : {
+               "gte" : "2010",
+               "lte" :  "2020"
+           }
+       }
+   }
+}
+```
+
+- Top 10 songs from 2010 to 2020 filter output
+
+```JSON
+GET /songs_db_index/songs/_search
+{
+   "_source":["movie_name", "song_name" ],
+   "size" : 10,
+    "sort" : [
+       { "song_rating" : {"order" : "desc"}}
+   ],
+   "query": {
+       "range" : {
+           "year" : {
+               "gte" : "2010",
+               "lte" :  "2020"
+           }
+       }
+   }
+}
+```
+
+- Top 10 songs from 2019
+
+```JSON
+GET /songs_db_index/songs/_search
+{
+   "size":10,
+   "sort" : [
+       { "song_rating" : {"order" : "desc"}}
+   ],
+   "query": {
+       "multi_match": {
+             "query" : "2019",
+           "fields":["year"],
+           "fuzziness": "AUTO"
+       }
+   }
+}
+```
+
+<center><strong>- OR -</strong></center>
+
+```JSON
+GET /songs_db_index/songs/_search
+{
+   "size":10,
+   "sort" : [
+       { "song_rating" : {"order" : "desc"}}
+   ],
+   "query": {
+       "match": {
+           "year": {
+           "query": "2019",
+           "fuzziness": "AUTO"
+           }
+       }
+   }
+}
+```
+
+- Search by lyrics spelling mistake
+
+```JSON
+GET /songs_db_index/_search
+{
+ "query": {
+   "multi_match" : {
+     "query":    "வித்தை விதைத் காதல் வித்தை",
+     "fuzziness": "AUTO"
+   }
+ }
+}
+```
+
+- இளையராஜா songs boosting `song_singers` by 3
+
+```JSON
+GET /songs_db_index/_search
+{
+   "query": {
+       "multi_match" : {
+           "query" : "இளையராஜா",
+           "fields": ["song_music", "song_singers^3"]
+       }
+   }
+}
+```
+
+- யுவன் சங்கர் ராஜா 2019 songs
+
+```JSON
+GET /songs_db_index/_search
+{
+"query": {
+  "bool": {
+        "must": [
+            { "match": { "song_music": "யுவன் சங்கர் ராஜா" }},
+            { "match": { "year": "2019" }}
+        ]
+      }
+    }
+
+}
+```
+
+- ஏ.ஆர்.ரஹ்மான் latest songs using bool must
+
+```JSON
+GET /songs_db_index/_search
+{
+ "query": {
+   "bool": {
+     "must": [{
+         "match": {
+           "song_music": "ஏ.ஆர்.ரஹ்மான்"
+         }
+       },
+       {
+         "range": {
+           "year" : {
+               "gte" : "2015"
+           }
+         }
+       }
+     ]
+   }
+ }
+}
+```
+
+- Latest songs, new songs
+
+```JSON
+GET /songs_db/_search
+{
+   "query": {
+       "range": {
+           "year" : {
+               "gte" : "2019"
+           }
+       }
+   }
+}
+```
+
+- Songs which released after 2010 and `song_music` by யுவன் சங்கர் ராஜா but not sung by யுவன் சங்கர் ராஜா
+
+```JSON
+GET /songs_db_index/_search
+{
+ "query": {
+   "bool": {
+     "must": {
+       "bool" : {
+         "filter": [
+       {
+         "range": {
+           "year" : {
+               "gte" : "2010"
+           }
+         }
+       }
+     ],
+         "must": { "match": { "song_music": "யுவன் சங்கர் ராஜா" }}
+       }
+     },
+     "must_not": { "match": {"song_singers": "யுவன் சங்கர் ராஜா" }}
+   }
+ }
+}
+```
+
+- `song_music` name ending in ன்
+
+```JSON
+GET /songs_db_index/_search
+{
+   "query": {
+       "wildcard" : {
+           "song_music" : "*ன்"
+       }
+   },
+   "_source": ["song_music"],
+   "highlight": {
+       "fields" : {
+           "song_music" : {}
+       }
+   }
+}
+```
+
+- Top 10 ஏ.ஆர்.ரஹ்மான் பாடல்கள்
+
+```JSON
+GET /songs_db_index/_search
+{
+ "size":10,
+   "sort" : [
+       { "song_rating" : {"order" : "desc"}}
+   ],
+ "query": {
+   "multi_match" : {
+     "query":    "ஏ.ஆர்.ரஹ்மான்",
+     "fields":["song_music"],
+     "fuzziness": "AUTO"
+   }
+ }
+}
+```
+
+- Search songs by movie
+
+```JSON
+GET /songs_db_index/_search
+{
+   "query": {
+       "multi_match": {
+           "fields":["movie_name"],
+           "query" : "என்னை அறிந்தால்",
+           "fuzziness": "AUTO"
+       }
+   }
+}
+```
+
+- Term query for exact match
+
+```JSON
+GET /songs_db_index/_search
+{
+ "query": {
+   "term": {
+     "movie_name":"என்னை அறிந்தால்"
+   }
+ }
+}
+```
+
+- For multiple indexes(databases) search
+
+```JSON
+GET /_all/_search
+{
+ "query": {
+   "term": {
+     "movie_name":"என்னை அறிந்தால்"
+   }
+ }
+}
 ```
