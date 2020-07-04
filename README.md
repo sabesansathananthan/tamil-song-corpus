@@ -59,7 +59,7 @@ Bulk API format of those 1500 songs are stored as [`tamil_songs_corpus_final.txt
 DELETE /songs_db_index
 ```
 
-> [!IMPORTANT]
+> :information_source: IMPORTANT
 >
 > > The below code must be run before creating the index(database). Make a folder named analysis in elasticserach config folder. Please copy tamil_stopwords.txt & tamil_stemming.txt to the analysis folder
 
