@@ -53,3 +53,39 @@ Bulk API format of those 1500 songs are stored as [`tamil_songs_corpus_final.txt
 > > For detailed steps on installing elasticsearch and sample-site watch this [`video`](https://www.youtube.com/watch?v=BpLDDuCaOTA&t=81s)
 
 ## Query DSL for ElasticSearch search engine
+
+```JSON
+# deleting an index(database)
+DELETE /songs_db_index
+```
+
+> [!IMPORTANT]
+>
+> > The below code must be run before creating the index(database). Make a folder named analysis in elasticserach config folder. Please copy tamil_stopwords.txt & tamil_stemming.txt to the analysis folder
+
+```JSON
+# custom stop words and stemming new analyzer along with the standard analyzer
+PUT /songs_db_index/
+{
+       "settings": {
+           "analysis": {
+               "analyzer": {
+                   "my_analyzer": {
+                       "tokenizer": "standard",
+                       "filter": ["custom_stopper","custom_stems"]
+                   }
+               },
+               "filter": {
+                   "custom_stopper": {
+                       "type": "stop",
+                       "stopwords_path": "analysis/tamil_stopwords.txt"
+                   },
+                   "custom_stems": {
+                       "type": "stemmer_override",
+                       "rules_path": "analysis/tamil_stemming.txt"
+                   }
+               }
+           }
+       }
+   }
+```
