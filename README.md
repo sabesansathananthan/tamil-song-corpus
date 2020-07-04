@@ -28,7 +28,7 @@ Randomly selected 1500 songs data are fully translated to Tamil and extra metada
 
 Bulk API format of those 1500 songs are stored as [`tamil_songs_corpus_final.txt`](/Data/tamil_songs_corpus_final.txt) file.
 
-> [!NOTE]
+> :point_up: **NOTE**
 >
 > > #### **Attributes**
 > >
@@ -48,7 +48,7 @@ Bulk API format of those 1500 songs are stored as [`tamil_songs_corpus_final.txt
 1. Install Elasticsearch from the [website](https://www.elastic.co/downloads/) to localhost or web server.
 2. Upload Bulk API format songs by run the [`iR.py`](/iR.py) file.
 
-> [!TIP]
+> :information_source: **TIP**
 >
 > > For detailed steps on installing elasticsearch and sample-site watch this [`video`](https://www.youtube.com/watch?v=BpLDDuCaOTA&t=81s)
 
@@ -59,9 +59,11 @@ Bulk API format of those 1500 songs are stored as [`tamil_songs_corpus_final.txt
 DELETE /songs_db_index
 ```
 
-> :information_source: IMPORTANT
+> :exclamation: **IMPORTANT**
 >
-> > The below code must be run before creating the index(database). Make a folder named analysis in elasticserach config folder. Please copy tamil_stopwords.txt & tamil_stemming.txt to the analysis folder
+> > - The below code must be run before creating the index(database).
+> > - Make a folder named analysis in elasticserach config folder.
+> > - Please copy tamil_stopwords.txt & tamil_stemming.txt to the analysis folder
 
 ```JSON
 # custom stop words and stemming new analyzer along with the standard analyzer
