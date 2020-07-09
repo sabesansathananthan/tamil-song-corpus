@@ -1,10 +1,10 @@
 # tamil-song-corpus :notes:
 
-![GitHub repo size](https://img.shields.io/github/repo-size/sabesansathananthan/tamil-song-corpus?color=red&style=plastic)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/sabesansathananthan/tamil-song-corpus?style=plastic)
-![GitHub](https://img.shields.io/github/license/sabesansathananthan/tamil-song-corpus?color=orange&style=plastic)
-![GitHub language count](https://img.shields.io/github/languages/count/sabesansathananthan/tamil-song-corpus?color=brightgreen&style=plastic)
-![GitHub top language](https://img.shields.io/github/languages/top/sabesansathananthan/tamil-song-corpus?color=blueviolet&style=plastic)
+[![GitHub repo size](https://img.shields.io/github/repo-size/sabesansathananthan/tamil-song-corpus?color=red&style=plastic)](https://github.com/sabesansathananthan/tamil-song-corpus)
+[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/sabesansathananthan/tamil-song-corpus?style=plastic)](https://github.com/sabesansathananthan/tamil-song-corpus)
+[![GitHub](https://img.shields.io/github/license/sabesansathananthan/tamil-song-corpus?color=orange&style=plastic)](https://github.com/sabesansathananthan/tamil-song-corpus/blob/master/LICENSE)
+[![GitHub language count](https://img.shields.io/github/languages/count/sabesansathananthan/tamil-song-corpus?color=brightgreen&style=plastic)](https://github.com/sabesansathananthan/tamil-song-corpus)
+[![GitHub top language](https://img.shields.io/github/languages/top/sabesansathananthan/tamil-song-corpus?color=blueviolet&style=plastic)](https://github.com/sabesansathananthan/tamil-song-corpus)
 [![Twitter Follow](https://img.shields.io/twitter/follow/TheSabesan?color=lightgrey&style=plastic)](https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fpublish.twitter.com%2F%3FbuttonType%3DFollowButton%26query%3Dhttps%253A%252F%252Ftwitter.com%252FTheSabesan%26widget%3DButton&ref_src=twsrc%5Etfw&screen_name=TheSabesan&tw_p=followbutton)
 
 This repo contains 4216 songs data scraped from [Tamilpaa](https://www.tamilpaa.com) and stored at [`tamilpaa_data.txt`](/Data/tamilpaa_data.txt) file. All the metadata are in English. [`Web_scraping_tamilpaa.ipynb`](/Web_scraping_tamilpaa.ipynb) is used to scrap the data.
